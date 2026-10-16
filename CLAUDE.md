@@ -19,10 +19,12 @@ Gradle 래퍼 사용 (Windows는 `gradlew.bat`, Git Bash/PowerShell은 `./gradle
 
 ## 현재 프로젝트 상태
 
-- 빌드 스크립트는 **Kotlin DSL**(`build.gradle.kts`, `settings.gradle.kts`)이며 JUnit BOM은 `6.0.0`입니다. 툴체인 버전은 지정돼 있지 않아 실행 중인 JDK를 사용합니다 (IntelliJ 프로젝트 생성 기본값).
-- 아직 `Game`도 테스트도 없습니다. `src/main/java/org/example/Main.java`는 IntelliJ가 만든 예제 파일이며 카타와 무관합니다.
-- 카타 코드는 `bowling` 패키지(`src/main/java/bowling/Game.java`, `src/test/java/bowling/GameTest.java`)에 만듭니다. `Main.java`의 `org.example`은 따르지 않습니다.
-- 테스트 스타일: JUnit 5+ API(`org.junit.jupiter.api.*`), `@BeforeEach`에서 `Game` 생성, 한국어 `@DisplayName`, `assertEquals(기대값, game.score())`. 첫 테스트는 거터 게임(20번 0핀 → 0점).
+- 빌드 스크립트는 **Kotlin DSL**(`build.gradle.kts`, `settings.gradle.kts`)이며 JUnit BOM은 `6.0.0`입니다. 툴체인 버전은 지정돼 있지 않아 실행 중인 JDK를 사용합니다 (IntelliJ 프로젝트 생성 기본값). `JavaCompile`은 UTF-8로 지정돼 있습니다 (Windows 기본 인코딩 cp949에서 한글 주석 때문에 컴파일이 실패하던 문제 방지).
+- `bowling.Game`(`src/main/java/bowling/Game.java`)이 구현돼 있습니다. `roll`은 투구를 `rolls[21]` 배열에 순서대로 저장하고, `score()`는 10프레임을 순회하며 스트라이크(보너스 다음 2투구) → 스페어(보너스 다음 1투구) → 일반 프레임 순으로 판별해 계산합니다. 10번째 프레임을 따로 처리하지 않고, 배열 21칸이 추가 투구를 그대로 담습니다.
+- `GameTest`(`src/test/java/bowling/GameTest.java`)에는 `PLAN.md`의 테스트 8개(거터, 전부 1핀, 스페어, 스트라이크, 퍼펙트 게임, 10프레임 스페어/스트라이크, 혼합 게임 167점)가 모두 통과합니다.
+- 입력 검증은 없습니다. 음수·11핀 이상·프레임 합 10 초과나 게임 종료 후 `roll`을 거부하지 않으며, 21번을 넘겨 `roll`하면 `ArrayIndexOutOfBoundsException`이 납니다.
+- `src/main/java/org/example/Main.java`는 IntelliJ가 만든 예제 파일이며 카타와 무관합니다. 카타 코드는 `bowling` 패키지에 둡니다.
+- 테스트 스타일: JUnit 5+ API(`org.junit.jupiter.api.*`), `@BeforeEach`에서 `Game` 생성, 한국어 `@DisplayName`, `assertEquals(기대값, game.score())`.
 
 ## 작업 방식 (TDD 스킬)
 
