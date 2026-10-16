@@ -2,6 +2,8 @@ package bowling;
 
 public class Game {
 
+    private static final int MAX_PINS = 10;
+
     private final int[] rolls = new int[21];
     private int currentRoll = 0;
 
@@ -13,11 +15,11 @@ public class Game {
         int score = 0;
         int i = 0;
         for (int frame = 0; frame < 10; frame++) {
-            if (rolls[i] == 10) {
-                score += 10 + rolls[i + 1] + rolls[i + 2];
+            if (isStrike(i)) {
+                score += MAX_PINS + rolls[i + 1] + rolls[i + 2];
                 i += 1;
-            } else if (rolls[i] + rolls[i + 1] == 10) {
-                score += 10 + rolls[i + 2];
+            } else if (isSpare(i)) {
+                score += MAX_PINS + rolls[i + 2];
                 i += 2;
             } else {
                 score += rolls[i] + rolls[i + 1];
@@ -25,5 +27,13 @@ public class Game {
             }
         }
         return score;
+    }
+
+    private boolean isStrike(int i) {
+        return rolls[i] == MAX_PINS;
+    }
+
+    private boolean isSpare(int i) {
+        return rolls[i] + rolls[i + 1] == MAX_PINS;
     }
 }
